@@ -1,23 +1,105 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
-});
+// Current Date / Time
+let currentDay = $('#currentDay');
+let currentDate;
+let currentTime;
+
+// Set-To/Get-From Local Storage (Time and Text)
+let calEntryEventTime;
+let calEntryEventTxt;
+let timeArr = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+// Button
+let saveBtn = $('.saveBtn');
+
+// Determine Color
+let calTimeblock;
+let timerInterval;
+let timeblockID = $("textarea[id*='timeblock']");
+
+// Calls Functions to Render Date and Events to the DOM & Update Colors
+function init() {
+    currentMomentDate();
+    renderEvents();
+    setBGColors();
+};
+
+// Gets Current Date and Renders in Jumbotron Header
+function currentMomentDate() {
+  currentDate = moment().format('dddd, LL');
+  currentDay.text(currentDate);
+};
+
+// Renders Events Pulled from Local Storage to DOM
+function renderEvents() {
+  for (let i = 0; i < timeArr.length; i++) { 
+      $('[id^=timeblock-]').each(function (i, v) {
+          $(v).val(localStorage.getItem(timeArr[i]));
+      })
+  }
+};
+;
+// Triggers Click Handler for Save Buttons
+saveBtn.on('click', saveButtonClickHandler);
+
+// When Save Button Clicked, Pulls Corresponding Time and Date Values
+function saveButtonClickHandler(event) {
+    // Keeps Form from Sending
+    event.preventDefault();
+    // Sets Value to Time Associated with Clicked Save Button
+    calEntryEventTime = $(this).attr('id').split('-')[1];
+    // Sets Value to the User's Input Text
+    calEntryEventTxt = $(this).siblings('textarea[name^="timeblock"]').val().trim();
+    // Calls Function to Store in Local Storage
+    storeEvents();
+};
+
+// Stores Time and Text Values to Local Storage where (Time = Key) and (User's Input Text = Value)
+function storeEvents() {
+    localStorage.setItem(calEntryEventTime, calEntryEventTxt);
+};
+
+// Updates Timeblock Classes/Colors as Time Progresses
+function setBGColors() {
+    // For each timeblock ID, 
+    timeblockID.each(function () {
+    // Split it to display the time contained at the end of the ID, 
+    calTimeBlock = $(this).attr('id').split('-')[1];
+    // And convert it to a Moment.js format, then an integer
+    calTimeBlock = parseInt(moment(calTimeBlock, 'H').format('H'));
+    // Get Moment.js Time & format identically
+    currentTime = parseInt(moment().format('H'));
+    
+    if (currentTime < calTimeBlock) {
+        $(this).removeClass('past present');
+        $(this).addClass('future');
+    } else if (currentTime === calTimeBlock) {
+        $(this).removeClass('past future');
+        $(this).addClass('present');
+    } else if (currentTime > calTimeBlock) {
+        $(this).removeClass('present future');
+        $(this).addClass('past');
+    } else {
+        console.log("Time Calculation Error");
+    }
+    })
+};
+
+// Updates Date/Time and Colors Once Per Minute On The Minute
+function setIntervalOnMinute() {
+    var currentDateSeconds = new Date().getSeconds();
+    if (currentDateSeconds == 0) {
+        setInterval(currentMomentDate, 60000);
+        setInterval(setBGColors, 60000);
+    } else {
+        setTimeout(function () {
+            setIntervalOnMinute();
+        }, (60 - currentDateSeconds) * 1000);
+    }
+    currentMomentDate();
+    setBGColors();
+};
+
+setIntervalOnMinute();
+
+// Initializes Page
+init();
