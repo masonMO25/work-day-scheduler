@@ -1,29 +1,23 @@
-// Current Date / Time
+// lets for the code
 let currentDay = $('#currentDay');
 let currentDate;
 let currentTime;
-
-// Set-To/Get-From Local Storage (Time and Text)
 let calEntryEventTime;
 let calEntryEventTxt;
 let timeArr = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-
-// Button
 let saveBtn = $('.saveBtn');
-
-// Determine Color
 let calTimeblock;
 let timerInterval;
 let timeblockID = $("textarea[id*='timeblock']");
 
-// Calls Functions to Render Date and Events to the DOM & Update Colors
+// Function to Render Date and Events to the DOM & Update Colors
 function init() {
     currentMomentDate();
     renderEvents();
     setBGColors();
 };
 
-// Gets Current Date and Renders in Jumbotron Header
+// Gets Current Date
 function currentMomentDate() {
   currentDate = moment().format('dddd, LL');
   currentDay.text(currentDate);
@@ -100,6 +94,4 @@ function setIntervalOnMinute() {
 };
 
 setIntervalOnMinute();
-
-// Initializes Page
 init();
