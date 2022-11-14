@@ -10,35 +10,29 @@ $(document).ready(function () {
         localStorage.setItem(time, text);
     })
    
-    function timeTracker() {
-        //get current number of hours.
+    function timeTrack() {
         var timeNow = dayjs().hour();
 
-        // loop over time blocks
         $(".time-block").each(function () {
-            var blockTime = parseInt($(this).attr("id").split("hour")[1]);
+            var currentTime = parseInt($(this).attr("id").split("hour-")[1]);
 
-            // To check the time and add the classes for background indicators
-            if (blockTime < timeNow) {
-                $(this).removeClass("future");
-                $(this).removeClass("present");
+            if (currentTime < timeNow) {
+                $(this).removeClass("future present");
                 $(this).addClass("past");
             }
-            else if (blockTime === timeNow) {
-                $(this).removeClass("past");
-                $(this).removeClass("future");
+            else if (currentTime === timeNow) {
+                $(this).removeClass("past future");
                 $(this).addClass("present");
             }
-            else { 
-                $(this).removeClass("present");
-                $(this).removeClass("past");
+            else if (currentTime > timeNow) { 
+                $(this).removeClass("past present");
                 $(this).addClass("future");
-
+            } else {
+                console.log("Time Calculation Error");
             }
         })
-    }
+    };
 
-   
     $("#hour-8 .description").val(localStorage.getItem("hour-8"));
     $("#hour-9 .description").val(localStorage.getItem("hour-9"));
     $("#hour-10 .description").val(localStorage.getItem("hour-10"));
@@ -50,5 +44,5 @@ $(document).ready(function () {
     $("#hour-16 .description").val(localStorage.getItem("hour-16"));
     $("#hour-17 .description").val(localStorage.getItem("hour-17"));
 
-    timeTracker();
+    timeTrack();
 })
