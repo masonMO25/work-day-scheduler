@@ -1,7 +1,6 @@
 var todayDate = dayjs().format('dddd hh:mma');
 $("#currentDay").html(todayDate);
 
-
 $(document).ready(function () {
      
     $(".saveBtn").on("click", function () {
