@@ -1,6 +1,7 @@
 var todayDate = dayjs().format('dddd hh:mma');
 $("#currentDay").html(todayDate);
 
+
 $(document).ready(function () {
      
     $(".saveBtn").on("click", function () {
@@ -10,7 +11,7 @@ $(document).ready(function () {
         localStorage.setItem(time, text);
     })
    
-    function timeTrack() {
+    function trackTime() {
         var timeNow = dayjs().hour();
 
         $(".time-block").each(function () {
@@ -44,5 +45,5 @@ $(document).ready(function () {
     $("#hour-16 .description").val(localStorage.getItem("hour-16"));
     $("#hour-17 .description").val(localStorage.getItem("hour-17"));
 
-    timeTrack();
+    trackTime();
 })
