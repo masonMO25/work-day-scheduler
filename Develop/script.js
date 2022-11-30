@@ -1,20 +1,20 @@
-var todayDate = dayjs().format('dddd hh:mma');
+let todayDate = dayjs().format('dddd hh:mma');
+
 $("#currentDay").html(todayDate);
 
-$(document).ready(function () {
-     
+$(document).ready(function () {    
     $(".saveBtn").on("click", function () {
-        var text = $(this).siblings(".description").val();
-        var time = $(this).parent().attr("id");
+        let text = $(this).siblings(".description").val();
+        let time = $(this).parent().attr("id");
 
         localStorage.setItem(time, text);
     })
    
-    function trackTime() {
-        var timeNow = dayjs().hour();
+    function findTime() {
+        let timeNow = dayjs().hour();
 
         $(".time-block").each(function () {
-            var currentTime = parseInt($(this).attr("id").split("hour-")[1]);
+            const currentTime = parseInt($(this).attr("id").split("hour-")[1]);
 
             if (currentTime < timeNow) {
                 $(this).removeClass("future present");
@@ -28,21 +28,10 @@ $(document).ready(function () {
                 $(this).removeClass("past present");
                 $(this).addClass("future");
             } else {
-                console.log("Time Calculation Error");
+                console.log("Error");
             }
         })
     };
 
-    $("#hour-8 .description").val(localStorage.getItem("hour-8"));
-    $("#hour-9 .description").val(localStorage.getItem("hour-9"));
-    $("#hour-10 .description").val(localStorage.getItem("hour-10"));
-    $("#hour-11 .description").val(localStorage.getItem("hour-11"));
-    $("#hour-12 .description").val(localStorage.getItem("hour-12"));
-    $("#hour-13 .description").val(localStorage.getItem("hour-13"));
-    $("#hour-14 .description").val(localStorage.getItem("hour-14"));
-    $("#hour-15 .description").val(localStorage.getItem("hour-15"));
-    $("#hour-16 .description").val(localStorage.getItem("hour-16"));
-    $("#hour-17 .description").val(localStorage.getItem("hour-17"));
-
-    trackTime();
+    findTime();
 })
