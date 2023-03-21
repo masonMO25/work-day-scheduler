@@ -1,48 +1,33 @@
-let todayDate = dayjs().format('dddd hh:mma');
+const $timeBlocks = $('.time-block');
 
-$("#currentDay").html(todayDate);
+const todayDate = dayjs().format('dddd hh:mma');
+$('#currentDay').html(todayDate);
 
 $(document).ready(function () {    
-    $(".saveBtn").on("click", function () {
-        let text = $(this).siblings(".description").val();
-        let time = $(this).parent().attr("id");
-
-        localStorage.setItem(time, text);
-    })
+  $('.saveBtn').on('click', function () {
+    const text = $(this).siblings('.description').val();
+    const time = $(this).parent().data('hour');
+    localStorage.setItem(time, text);
+  });
    
-    function findTime() {
-        let timeNow = dayjs().hour();
+  function updateTimeBlocks() {
+    const timeNow = dayjs().hour();
 
-        $(".time-block").each(function () {
-            const currentTime = parseInt($(this).attr("id").split("hour-")[1]);
+    $timeBlocks.each(function () {
+      const $block = $(this);
+      const blockHour = $block.data('hour');
 
-            if (currentTime < timeNow) {
-                $(this).removeClass("future present");
-                $(this).addClass("past");
-            }
-            else if (currentTime === timeNow) {
-                $(this).removeClass("past future");
-                $(this).addClass("present");
-            }
-            else if (currentTime > timeNow) { 
-                $(this).removeClass("past present");
-                $(this).addClass("future");
-            } else {
-                console.log("Error");
-            }
-        })
-    };
+      $block.toggleClass('past', blockHour < timeNow);
+      $block.toggleClass('present', blockHour === timeNow);
+      $block.toggleClass('future', blockHour > timeNow);
+    });
+  }
 
-    findTime();
-})
+  updateTimeBlocks();
+});
 
-$("#hour-8 .description").val(localStorage.getItem("hour-8"));
-$("#hour-9 .description").val(localStorage.getItem("hour-9"));
-$("#hour-10 .description").val(localStorage.getItem("hour-10"));
-$("#hour-11 .description").val(localStorage.getItem("hour-11"));
-$("#hour-12 .description").val(localStorage.getItem("hour-12"));
-$("#hour-13 .description").val(localStorage.getItem("hour-13"));
-$("#hour-14 .description").val(localStorage.getItem("hour-14"));
-$("#hour-15 .description").val(localStorage.getItem("hour-15"));
-$("#hour-16 .description").val(localStorage.getItem("hour-16"));
-$("#hour-17 .description").val(localStorage.getItem("hour-17"));
+$timeBlocks.each(function () {
+  const $description = $(this).find('.description');
+  const hour = $(this).data('hour');
+  $description.val(localStorage.getItem(hour));
+});
