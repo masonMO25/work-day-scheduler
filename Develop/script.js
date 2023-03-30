@@ -1,5 +1,4 @@
 const $timeBlocks = $('.time-block');
-
 const todayDate = dayjs().format('dddd hh:mma');
 $('#currentDay').html(todayDate);
 
@@ -10,20 +9,20 @@ $(document).ready(function () {
     localStorage.setItem(time, text);
   });
    
-  function updateTimeBlocks() {
-    const timeNow = dayjs().hour();
+  function updateBlocks() {
+    const currentTime = dayjs().hour();
 
     $timeBlocks.each(function () {
       const $block = $(this);
       const blockHour = $block.data('hour');
 
-      $block.toggleClass('past', blockHour < timeNow);
-      $block.toggleClass('present', blockHour === timeNow);
-      $block.toggleClass('future', blockHour > timeNow);
+      $block.toggleClass('past', blockHour < currentTime);
+      $block.toggleClass('present', blockHour === currentTime);
+      $block.toggleClass('future', blockHour > currentTime);
     });
   }
 
-  updateTimeBlocks();
+  updateBlocks();
 });
 
 $timeBlocks.each(function () {
